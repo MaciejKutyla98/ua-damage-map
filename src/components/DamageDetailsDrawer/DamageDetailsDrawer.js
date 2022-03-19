@@ -2,6 +2,7 @@ import React from 'react';
 import cn from 'classnames';
 
 import { useIsMobile } from '../../hooks/useIsMobile';
+import DamageDetails from '../DamageDetails/DamageDetails';
 
 import styles from './DamageDetailsDrawer.module.scss';
 
@@ -13,6 +14,8 @@ export const DamageDetailsDrawer = ({damageDetails, visible, onClose}) => {
   console.log('is', isMobile);
 
   return (
-    <Drawer className={cn(styles.drawer, {[styles.drawerDesktop]: !isMobile})} placement={isMobile ? 'bottom' : 'left'} visible={visible} onClose={onClose}>damage details drawer</Drawer>
+    <Drawer className={cn(styles.drawer, {[styles.drawerDesktop]: !isMobile})} placement={isMobile ? 'bottom' : 'left'} visible={visible} onClose={onClose}>
+      <DamageDetails />
+    </Drawer>
   )
 };
