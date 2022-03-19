@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
+import cn from 'classnames';
 import ReactMapGL, {Marker} from "react-map-gl";
 import {fetchData} from "../FetchData/FetchData";
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -8,6 +9,7 @@ import {Modal} from "../Modal/Modal";
 import {MarkerIcon} from '../MarkerIcon/MarkerIcon';
 
 import styles from './Map.module.scss';
+import {DamageDetailsDrawer} from '../DamageDetailsDrawer/DamageDetailsDrawer';
 
 export const Map = () => {
     const [fetchedData, setFetchedData] = useState();
@@ -20,6 +22,8 @@ export const Map = () => {
         latitude: 49.0139,
         zoom: 6
     });
+
+    const [currentDamageDetails, setCurrentDamageDetails] = useState();
 
     const mapRef = useRef();
     const geocoderContainerRef = useRef();
@@ -65,17 +69,17 @@ export const Map = () => {
 
     return (
       <>
-        <div ref={geocoderContainerRef} className={styles.geocoderContainer} />
+        <div ref={geocoderContainerRef} className={cn(styles.geocoderContainer, {[styles.geocoderContainerHidden]: !!currentDamageDetails})} />
         <ReactMapGL
             ref={mapRef}
             {...mapViewport}
             mapboxApiAccessToken="pk.eyJ1IjoibWFjaWVqbzExNyIsImEiOiJjbDBwZHlrOGMxeGk0M2N1bzU5Z2V1Yjh3In0.5K0DGY1wdACaDKut7kM2Zw"
             mapStyle="mapbox://styles/mapbox/streets-v11"
             onViewportChange={setMapViewport}
-            onClick={(x) => {
-                setLngLat(x.lngLat);
-                showModal()
-            }}
+            // onClick={({lngLat}) => {
+            //     console.log('debug', lngLat);
+            //     showModal()
+            // }}
         >
             {fetchedData?.map((damageReport) => {
                 const variant = {
@@ -84,9 +88,17 @@ export const Map = () => {
                     doesNotWork: 'bad'
                 }[damageReport.damageDegree];
 
-                return <Marker key={damageReport.id} latitude={damageReport.latitude}
-                               longitude={damageReport.longitude}>
-                    <MarkerIcon variant={variant}/>
+                return <Marker
+                  key={damageReport.id}
+                  latitude={damageReport.latitude}
+                  longitude={damageReport.longitude}
+                >
+                    <MarkerIcon
+                      variant={variant}
+                      onClick={(e) => {
+                         setCurrentDamageDetails(damageReport);
+                      }}
+                    />
                 </Marker>;
             })}
             <Geocoder
@@ -107,6 +119,13 @@ export const Map = () => {
                 lngLat={lngLat}
             />
         </ReactMapGL>
+          <DamageDetailsDrawer
+            title={'Details'}
+            visible={!!currentDamageDetails}
+            onClose={() => {
+                setCurrentDamageDetails(undefined);
+            }}
+          />
           </>
     );
 }

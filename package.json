@@ -17,6 +17,7 @@
     "react-map-gl": "5.2.3",
     "react-map-gl-geocoder": "^2.2.0",
     "react-scripts": "5.0.0",
+    "react-use": "^17.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
