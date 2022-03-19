@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import Geocoder from 'react-map-gl-geocoder'
 import {Modal} from "../Modal/Modal";
+import './Map.scss'
 
 export const Map = () => {
     const [fetchedData, setFetchedData] = useState();
@@ -42,6 +43,9 @@ export const Map = () => {
 
     const handleOk = () => {
         setIsModalVisible(false);
+        fetchData().then((data)=>{
+            setFetchedData(data)
+        })
     };
 
     const handleCancel = () => {
@@ -65,8 +69,8 @@ export const Map = () => {
                 showModal()
             }}
         >
-            {fetchedData?.map((_) => <Marker latitude={_.latitude} longitude={_.longitude}>
-                <span className="lnr lnr-map-marker"></span>
+            {fetchedData?.map((_) => <Marker key={_.id} latitude={_.latitude} longitude={_.longitude}>
+                <span className="lnr lnr-map-marker test" ></span>
             </Marker>)}
             <Geocoder
                 mapRef={mapRef}
