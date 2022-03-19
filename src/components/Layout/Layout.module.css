@@ -1,0 +1,15 @@
+.heading {
+  color: white;
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.header {
+  padding: 0 25px;
+}
+
+main {
+  position: relative;
+}
+
+/*# sourceMappingURL=Layout.module.css.map */
