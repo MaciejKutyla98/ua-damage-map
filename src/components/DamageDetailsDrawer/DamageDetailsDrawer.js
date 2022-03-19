@@ -14,7 +14,8 @@ export const DamageDetailsDrawer = ({damageDetails, visible, onClose}) => {
   console.log('is', isMobile);
 
   return (
-    <Drawer className={cn(styles.drawer, {[styles.drawerDesktop]: !isMobile})} placement={isMobile ? 'bottom' : 'left'} visible={visible} onClose={onClose}>
+    <Drawer             title={'Details'}
+                        className={cn(styles.drawer, {[styles.drawerDesktop]: !isMobile})} placement={isMobile ? 'bottom' : 'left'} visible={visible} onClose={onClose}>
       <DamageDetails damageDetails={damageDetails} />
     </Drawer>
   )
