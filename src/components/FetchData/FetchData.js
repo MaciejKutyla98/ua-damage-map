@@ -1,16 +1,13 @@
-export const geojson = {
-    type: 'FeatureCollection',
-    features: [
-        {
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                coordinates: [50.27, 30.30]
-            },
-            properties: {
-                title: 'Kiev',
-                description: 'Capital city of Ukraine'
-            }
+export const fetchData = () => {
+    const url = 'https://ua-damage-map-api-prod.herokuapp.com/'
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
-    ]
-};
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.log(error));
+}
