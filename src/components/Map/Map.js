@@ -5,8 +5,9 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import Geocoder from 'react-map-gl-geocoder'
 import {Modal} from "../Modal/Modal";
-import './Map.scss'
 import {MarkerIcon} from '../MarkerIcon/MarkerIcon';
+
+import styles from './Map.module.scss';
 
 export const Map = () => {
     const [fetchedData, setFetchedData] = useState();
@@ -19,7 +20,10 @@ export const Map = () => {
         latitude: 49.0139,
         zoom: 6
     });
+
     const mapRef = useRef();
+    const geocoderContainerRef = useRef();
+
     const handleViewportChange = useCallback(
         (newViewport) => setMapViewport(newViewport),
         []
@@ -58,7 +62,17 @@ export const Map = () => {
         })
     }, [])
     console.log(fetchedData)
+
+    const onMapLoad = useCallback(() => {
+        console.log('ccc', mapRef.current.getMap());
+        mapRef.current?.on('dblclick', () => {
+            console.log('click');
+        })
+    }, []);
+
     return (
+      <>
+        <div ref={geocoderContainerRef} className={styles.geocoderContainer} />
         <ReactMapGL
             ref={mapRef}
             {...mapViewport}
@@ -69,6 +83,7 @@ export const Map = () => {
                 setLngLat(x.lngLat);
                 showModal()
             }}
+            onLoad={onMapLoad}
         >
             {fetchedData?.map((damageReport) => {
                 const variant = {
@@ -84,9 +99,13 @@ export const Map = () => {
             })}
             <Geocoder
                 mapRef={mapRef}
+                containerRef={geocoderContainerRef}
                 onViewportChange={handleGeocoderViewportChange}
                 mapboxApiAccessToken='pk.eyJ1IjoibWFjaWVqbzExNyIsImEiOiJjbDBwZHlrOGMxeGk0M2N1bzU5Z2V1Yjh3In0.5K0DGY1wdACaDKut7kM2Zw'
                 position="top-left"
+                onClick={() => {
+                    console.log('test')
+                }}
             />
             <Modal
                 isModalVisible={isModalVisible}
@@ -96,5 +115,6 @@ export const Map = () => {
                 lngLat={lngLat}
             />
         </ReactMapGL>
+          </>
     );
 }
