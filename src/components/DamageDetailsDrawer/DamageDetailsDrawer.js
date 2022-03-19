@@ -15,7 +15,7 @@ export const DamageDetailsDrawer = ({damageDetails, visible, onClose}) => {
 
   return (
     <Drawer className={cn(styles.drawer, {[styles.drawerDesktop]: !isMobile})} placement={isMobile ? 'bottom' : 'left'} visible={visible} onClose={onClose}>
-      <DamageDetails />
+      <DamageDetails damageDetails={damageDetails} />
     </Drawer>
   )
 };

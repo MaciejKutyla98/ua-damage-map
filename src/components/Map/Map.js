@@ -125,6 +125,7 @@ export const Map = () => {
             onClose={() => {
                 setCurrentDamageDetails(undefined);
             }}
+            damageDetails={currentDamageDetails}
           />
           </>
     );

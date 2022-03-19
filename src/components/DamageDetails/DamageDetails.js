@@ -1,6 +1,7 @@
 import React from 'react';
 
-export const DamageDetails = () => {
+export const DamageDetails = ({damageDetails}) => {
+  console.log('debug', damageDetails);
   return (
     <div>todo damage details</div>
   )
