@@ -2,11 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.scss';
+import {MapProvider} from "./hooks/mapHook";
+import {Map} from "./components/Map/Map";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <MapProvider>
+        <Map />
+    </MapProvider>,
+    document.getElementById("root")
 );
 
