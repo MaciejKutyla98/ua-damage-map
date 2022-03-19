@@ -77,6 +77,7 @@ export const Map = () => {
             mapStyle="mapbox://styles/mapbox/streets-v11"
             onViewportChange={setMapViewport}
             onClick={({lngLat}) => {
+                setLngLat(lngLat);
                 showModal()
             }}
         >
