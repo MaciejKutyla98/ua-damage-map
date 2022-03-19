@@ -6,6 +6,7 @@ import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import Geocoder from 'react-map-gl-geocoder'
 import {Modal} from "../Modal/Modal";
 import './Map.scss'
+import {MarkerIcon} from '../MarkerIcon/MarkerIcon';
 
 export const Map = () => {
     const [fetchedData, setFetchedData] = useState();
@@ -69,9 +70,18 @@ export const Map = () => {
                 showModal()
             }}
         >
-            {fetchedData?.map((_) => <Marker key={_.id} latitude={_.latitude} longitude={_.longitude}>
-                <span className="lnr lnr-map-marker test" ></span>
-            </Marker>)}
+            {fetchedData?.map((damageReport) => {
+                const variant = {
+                    worksCorrectly: 'good',
+                    worksPartially: 'moderate',
+                    doesNotWork: 'bad'
+                }[damageReport.damageDegree];
+
+                return <Marker key={damageReport.id} latitude={damageReport.latitude}
+                               longitude={damageReport.longitude}>
+                    <MarkerIcon variant={variant}/>
+                </Marker>;
+            })}
             <Geocoder
                 mapRef={mapRef}
                 onViewportChange={handleGeocoderViewportChange}

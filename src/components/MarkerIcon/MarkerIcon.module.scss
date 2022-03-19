@@ -1,0 +1,28 @@
+.marker {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: .25em .25em 1em rgba(black, .3);
+  background-color: gray;
+  cursor: pointer;
+
+  &.markerGood {
+    background-color: #52c41a;
+  }
+
+  &.markerModerate {
+    background-color: #d48806;
+  }
+
+  &.markerBad {
+    background-color: #ff4d4f;
+  }
+}
+
+.icon {
+  font-size: 2em;
+  color: white;
+}
