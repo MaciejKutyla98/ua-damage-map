@@ -63,13 +63,6 @@ export const Map = () => {
     }, [])
     console.log(fetchedData)
 
-    const onMapLoad = useCallback(() => {
-        console.log('ccc', mapRef.current.getMap());
-        mapRef.current?.on('dblclick', () => {
-            console.log('click');
-        })
-    }, []);
-
     return (
       <>
         <div ref={geocoderContainerRef} className={styles.geocoderContainer} />
@@ -83,7 +76,6 @@ export const Map = () => {
                 setLngLat(x.lngLat);
                 showModal()
             }}
-            onLoad={onMapLoad}
         >
             {fetchedData?.map((damageReport) => {
                 const variant = {
