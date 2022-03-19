@@ -1,6 +1,8 @@
+import {useState} from "react";
+
 export const fetchData = () => {
-    const url = 'https://ua-damage-map-api-prod.herokuapp.com/'
-    fetch(url, {
+    const url = 'https://ua-damage-map-api-prod.herokuapp.com/damage-report'
+    return fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -8,6 +10,5 @@ export const fetchData = () => {
         }
     })
         .then(response => response.json())
-        .then(data => console.log(data))
         .catch(error => console.log(error));
 }
