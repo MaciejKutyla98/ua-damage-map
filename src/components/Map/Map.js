@@ -76,10 +76,9 @@ export const Map = () => {
             mapboxApiAccessToken="pk.eyJ1IjoibWFjaWVqbzExNyIsImEiOiJjbDBwZHlrOGMxeGk0M2N1bzU5Z2V1Yjh3In0.5K0DGY1wdACaDKut7kM2Zw"
             mapStyle="mapbox://styles/mapbox/streets-v11"
             onViewportChange={setMapViewport}
-            // onClick={({lngLat}) => {
-            //     console.log('debug', lngLat);
-            //     showModal()
-            // }}
+            onClick={({lngLat}) => {
+                showModal()
+            }}
         >
             {fetchedData?.map((damageReport) => {
                 const variant = {
