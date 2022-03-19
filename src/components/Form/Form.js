@@ -1,4 +1,4 @@
-import { Form as AntForm, Input, Button, Select } from 'antd';
+import { Form as AntForm, Input, Button, Select, notification } from 'antd';
 import React from "react";
 import {sendDamageReport} from "../SendDamageReport/SendDamageReport";
 
@@ -26,6 +26,14 @@ export const Form = (props) => {
             .then(data => {
                 props.onOk();
             })
+        notification.open({
+            message: 'Report was added successfully',
+            description:
+                'Thank you for your commitment. You will definitely make life easier for others. May free Ukraine live!',
+            onClick: () => {
+                console.log('Notification Clicked!');
+            },
+        });
     };
         return (
             <AntForm {...layout} ref={formRef} name="control-ref" onFinish={onFinish}>
