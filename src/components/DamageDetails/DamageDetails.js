@@ -16,7 +16,7 @@ export const DamageDetails = ({damageDetails}) => {
           return (
             <div className={styles.placeCategory}>
               {categories.map((category, categoryIndex) => (
-                <Tag key={categoryIndex}>
+                <Tag color={'#1890ff'} key={categoryIndex}>
                   {category}
                 </Tag>
               ))}
