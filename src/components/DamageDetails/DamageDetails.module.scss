@@ -9,7 +9,6 @@
 .content {
   &.contentGood {
     color: #ff4d4f;
-
   }
 
   &.contentModerate {
@@ -18,5 +17,16 @@
 
   &.contentBad {
     color: #52c41a;
+  }
+}
+
+.image {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+
+  @media (min-width: 900px) {
+    bottom: 20px;
+    left: 20px;
   }
 }

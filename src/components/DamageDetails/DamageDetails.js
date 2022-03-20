@@ -3,8 +3,11 @@ import cn from 'classnames';
 import styles from './DamageDetails.module.scss';
 import { Tag } from 'antd';
 import { fetchAvailablePlaces } from '../../api/availablePlaces';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 export const DamageDetails = ({damageDetails, bounds, onSetAvailablePoints}) => {
+    const isMobile = useIsMobile();
+
     const text = {
         worksCorrectly: 'It works correctly!',
         worksPartially: 'It works partially!',
@@ -57,10 +60,11 @@ export const DamageDetails = ({damageDetails, bounds, onSetAvailablePoints}) => 
         <p className={styles.heading}>
           Description:
         </p>
-        <p className={styles.content}>
+        <p className={cn(styles.content, styles.text)}>
           {damageDetails.description}
         </p>
       </div>
+      {!isMobile && <img src={`https://via.placeholder.com/325x250`} className={styles.image} />}
     </div>
 
   )
