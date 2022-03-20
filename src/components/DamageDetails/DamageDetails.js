@@ -5,9 +5,9 @@ import styles from './DamageDetails.module.scss';
 
 export const DamageDetails = ({damageDetails}) => {
     const text = {
-        worksCorrectly: 'It works correctly!',
+        worksCorrectly: 'It does not work!',
         worksPartially: 'It works partially!',
-        doesNotWork: 'It does not work!'
+        doesNotWork: 'It works correctly!'
     }[damageDetails.damageDegree];
 
   console.log('debug', damageDetails);
@@ -20,9 +20,9 @@ export const DamageDetails = ({damageDetails}) => {
         <p className={cn(
             styles.content,
             {
-                [styles.contentGood]: damageDetails.damageDegree === 'worksCorrectly',
+                [styles.contentGood]: damageDetails.damageDegree === 'doesNotWork',
                 [styles.contentModerate]: damageDetails.damageDegree === 'worksPartially',
-                [styles.contentBad]: damageDetails.damageDegree === 'doesNotWork'
+                [styles.contentBad]: damageDetails.damageDegree === 'worksCorrectly'
             }
         )}>
             {text}
