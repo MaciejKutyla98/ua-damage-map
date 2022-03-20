@@ -12,17 +12,26 @@ import useSupercluster from 'use-supercluster';
 import styles from './Map.module.scss';
 import {DamageDetailsDrawer} from '../DamageDetailsDrawer/DamageDetailsDrawer';
 
+const initialMapViewport = {
+    height: "100vh",
+    width: "100wh",
+    longitude: 31.2858,
+    latitude: 49.0139,
+    zoom: 6
+};
+
 export const Map = () => {
     const [fetchedData, setFetchedData] = useState();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [lngLat, setLngLat] = useState(null)
-    const [mapViewport, setMapViewport] = useState({
-        height: "100vh",
-        width: "100wh",
-        longitude: 31.2858,
-        latitude: 49.0139,
-        zoom: 6
-    });
+    const [mapViewport, setMapViewport] = useState(initialMapViewport);
+
+    const resetMapViewport = () => {
+        setMapViewport((previousMapViewport) => ({
+            ...previousMapViewport,
+            ...initialMapViewport
+        }))
+    }
 
     const [currentDamageDetails, setCurrentDamageDetails] = useState();
 
@@ -111,8 +120,6 @@ export const Map = () => {
                 const isCluster = properties?.cluster;
                 const pointCount = properties?.point_count;
 
-                console.log('ppp', properties);
-
                 const handleOnClick = () => {
                     if (isCluster) {
                         const expansionZoom = Math.min(
@@ -176,6 +183,9 @@ export const Map = () => {
                 onViewportChange={handleGeocoderViewportChange}
                 mapboxApiAccessToken='pk.eyJ1IjoibWFjaWVqbzExNyIsImEiOiJjbDBwZHlrOGMxeGk0M2N1bzU5Z2V1Yjh3In0.5K0DGY1wdACaDKut7kM2Zw'
                 position="top-left"
+                onClear={() => {
+                    resetMapViewport();
+                }}
             />
             <Modal
                 isModalVisible={isModalVisible}
