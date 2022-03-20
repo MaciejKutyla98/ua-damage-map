@@ -10,7 +10,8 @@
   cursor: pointer;
 
   &.markerGood {
-    background-color: #52c41a;
+    background-color: #ff4d4f;
+
   }
 
   &.markerModerate {
@@ -18,7 +19,7 @@
   }
 
   &.markerBad {
-    background-color: #ff4d4f;
+    background-color: #52c41a;
   }
 
   &.markerWithPointCount {

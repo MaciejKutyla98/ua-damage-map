@@ -2,6 +2,9 @@
 
 }
 
+.address {
+
+}
 .damageDegree {
 
 }
@@ -16,7 +19,8 @@
 
 .content {
   &.contentGood {
-    color: #52c41a;
+    color: #ff4d4f;
+
   }
 
   &.contentModerate {
@@ -24,6 +28,6 @@
   }
 
   &.contentBad {
-    color: #ff4d4f;
+    color: #52c41a;
   }
 }

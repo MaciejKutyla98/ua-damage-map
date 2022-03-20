@@ -5,14 +5,22 @@ import styles from './DamageDetails.module.scss';
 
 export const DamageDetails = ({damageDetails}) => {
     const text = {
-        worksCorrectly: 'It does not work!',
+        worksCorrectly: 'It works correctly!',
         worksPartially: 'It works partially!',
-        doesNotWork: 'It works correctly!'
+        doesNotWork: 'It does not work!'
     }[damageDetails.damageDegree];
 
   console.log('debug', damageDetails);
   return (
     <div className={styles.wrapper}>
+        <div className={styles.address}>
+            <p className={styles.heading}>
+                Address:
+            </p>
+            <p className={styles.content}>
+                {damageDetails.address}
+            </p>
+        </div>
       <div className={styles.damageDegree}>
         <p className={styles.heading}>
           Damage degree:
