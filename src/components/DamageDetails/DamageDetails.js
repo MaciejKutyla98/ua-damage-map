@@ -2,13 +2,20 @@ import React from 'react';
 import cn from 'classnames';
 import styles from './DamageDetails.module.scss';
 import { Tag } from 'antd';
+import { fetchAvailablePlaces } from '../../api/availablePlaces';
 
-export const DamageDetails = ({damageDetails}) => {
+export const DamageDetails = ({damageDetails, bounds, onSetAvailablePoints}) => {
     const text = {
         worksCorrectly: 'It works correctly!',
         worksPartially: 'It works partially!',
         doesNotWork: 'It does not work!'
     }[damageDetails.damageDegree];
+
+  const handleSearchAvailableLocations = async (searchText) => {
+    const [minLon,minLat,maxLon,maxLat] = bounds;
+    const result = await fetchAvailablePlaces({searchText, minLon, maxLat, maxLon, minLat});
+    onSetAvailablePoints(result);
+  }
 
     const renderCategories = () => {
         const categories = damageDetails.placeCategory?.split(',');
@@ -16,9 +23,11 @@ export const DamageDetails = ({damageDetails}) => {
           return (
             <div className={styles.placeCategory}>
               {categories.map((category, categoryIndex) => (
-                <Tag color={'#1890ff'} key={categoryIndex}>
+                <Tag.CheckableTag checked={true} key={categoryIndex} onClick={() => {
+                  handleSearchAvailableLocations(category);
+                }}>
                   {category}
-                </Tag>
+                </Tag.CheckableTag>
               ))}
             </div>
             )

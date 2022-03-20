@@ -8,6 +8,8 @@ import Geocoder from 'react-map-gl-geocoder'
 import {Modal} from "../Modal/Modal";
 import {MarkerIcon} from '../MarkerIcon/MarkerIcon';
 import useSupercluster from 'use-supercluster';
+import { Button, notification } from 'antd';
+import { RollbackOutlined } from '@ant-design/icons';
 
 import styles from './Map.module.scss';
 import {DamageDetailsDrawer} from '../DamageDetailsDrawer/DamageDetailsDrawer';
@@ -22,7 +24,9 @@ const initialMapViewport = {
 
 export const Map = () => {
     const [fetchedData, setFetchedData] = useState();
+    const [availablePoints, setAvailablePoints] = useState();
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isDrawerVisible, setIsDrawerVisible] = useState(false);
     const [lngLat, setLngLat] = useState(null)
     const [mapViewport, setMapViewport] = useState(initialMapViewport);
 
@@ -36,6 +40,7 @@ export const Map = () => {
     const [currentDamageDetails, setCurrentDamageDetails] = useState();
 
     const mapRef = useRef();
+
     const geocoderContainerRef = useRef();
 
     const handleViewportChange = useCallback(
@@ -54,6 +59,16 @@ export const Map = () => {
         },
         []
     );
+
+    const renderBackButton = () => availablePoints?.length ? (
+      <Button
+        icon={<RollbackOutlined />}
+        onClick={() => {
+            setAvailablePoints(undefined);
+        }}
+        className={styles.button}
+      >Go back</Button>
+    ): null;
 
     const bounds = mapRef?.current?.getMap().getBounds().toArray().flat();
 
@@ -75,22 +90,38 @@ export const Map = () => {
         fetchData().then((data)=>{
             setFetchedData(data)
         })
-    }, [])
+    }, []);
 
-    const points = fetchedData ? fetchedData.map(({latitude, longitude, id, damageDegree, description, placeName, placeCategory}) => ({
-        type: 'Feature',
-        properties: {
-            id,
-            damageDegree,
-            description,
-            placeName,
-            placeCategory
-        },
-        geometry:  {
-            type: 'Point',
-            coordinates:  [longitude, latitude]
+    useEffect(() => {
+        if (availablePoints?.length) {
+            notification.open({
+                message: 'We found new available locations',
+                description:
+                  'We hope you can use them all!',
+            })
         }
-    })) : [];
+    }, [availablePoints]);
+
+    const dataToMap = availablePoints || fetchedData || [];
+
+    const points = dataToMap.map(({latitude, longitude, id, damageDegree, description, placeName, placeCategory}) => {
+        const isAvailablePoint = !id;
+        return ({
+            type: 'Feature',
+            properties: {
+                id,
+                damageDegree,
+                description,
+                placeName,
+                placeCategory,
+                isAvailablePoint,
+            },
+            geometry: {
+                type: 'Point',
+                coordinates: [longitude, latitude]
+            }
+        });
+    });
 
     const { clusters, supercluster } = useSupercluster({
         points,
@@ -105,7 +136,8 @@ export const Map = () => {
     return (
       <>
         <div ref={geocoderContainerRef} className={cn(styles.geocoderContainer, {[styles.geocoderContainerHidden]: !!currentDamageDetails})} />
-        <ReactMapGL
+          {renderBackButton()}
+          <ReactMapGL
             ref={mapRef}
             {...mapViewport}
             mapboxApiAccessToken="pk.eyJ1IjoibWFjaWVqbzExNyIsImEiOiJjbDBwZHlrOGMxeGk0M2N1bzU5Z2V1Yjh3In0.5K0DGY1wdACaDKut7kM2Zw"
@@ -119,6 +151,7 @@ export const Map = () => {
             {clusters.map((cluster, index) => {
                 const [longitude, latitude] = cluster.geometry.coordinates;
                 const properties = cluster?.properties;
+                const isAvailablePoint = properties?.isAvailablePoint;
                 const isCluster = properties?.cluster;
                 const pointCount = properties?.point_count;
 
@@ -151,6 +184,7 @@ export const Map = () => {
                     >
                         <MarkerIcon
                           pointCount={pointCount}
+                          isAvailablePoint={isAvailablePoint}
                           onClick={() => {
                               handleOnClick();
                           }}
@@ -171,8 +205,10 @@ export const Map = () => {
                 >
                     <MarkerIcon
                       variant={markerIconVariant}
+                      isAvailablePoint={isAvailablePoint}
                       onClick={() => {
                           handleOnClick()
+                          setIsDrawerVisible(true);
                           setCurrentDamageDetails(properties);
                       }
                     }
@@ -198,11 +234,16 @@ export const Map = () => {
             />
         </ReactMapGL>
           <DamageDetailsDrawer
-            visible={!!currentDamageDetails}
+            visible={isDrawerVisible && !!currentDamageDetails}
             onClose={() => {
                 setCurrentDamageDetails(undefined);
             }}
             damageDetails={currentDamageDetails}
+            bounds={bounds}
+            onSetAvailablePoints={(points) => {
+                setAvailablePoints(points);
+                setIsDrawerVisible(false);
+            }}
           />
           </>
     );

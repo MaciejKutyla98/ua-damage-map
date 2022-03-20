@@ -1,7 +1,7 @@
 import { useWindowSize } from 'react-use';
 
 export const useIsMobile = () => {
-  const {width, height} = useWindowSize();
+  const {width} = useWindowSize();
 
   return width < 900;
 };

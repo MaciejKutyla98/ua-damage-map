@@ -1,5 +1,3 @@
-import {useState} from "react";
-
 export const fetchData = () => {
     const url = 'https://ua-damage-map-api-prod.herokuapp.com/damage-report'
     return fetch(url, {

@@ -1,6 +1,5 @@
 import React from "react";
-import {useState} from "react";
-import {Modal as AntModal, Button} from "antd";
+import {Modal as AntModal} from "antd";
 
 import 'antd/dist/antd.css';
 import {Form} from "../Form/Form";
@@ -14,6 +13,9 @@ export const Modal = (props) => {
                       onCancel={props.handleCancel}
                       okButtonProps={{form:'control-ref',  htmlType:"submit"}}
                       destroyOnClose={true}
+                      style={{
+                        zIndex: 100000
+                      }}
             >
                 <Form
                     onOk={props.handleOk}
