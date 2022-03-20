@@ -13,6 +13,7 @@ export const Modal = (props) => {
                       onOk={props.handleOk}
                       onCancel={props.handleCancel}
                       okButtonProps={{form:'control-ref',  htmlType:"submit"}}
+                      destroyOnClose={true}
             >
                 <Form
                     onOk={props.handleOk}
