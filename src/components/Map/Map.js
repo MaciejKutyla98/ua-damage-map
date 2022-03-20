@@ -77,12 +77,14 @@ export const Map = () => {
         })
     }, [])
 
-    const points = fetchedData ? fetchedData.map(({latitude, longitude, id, damageDegree, description}) => ({
+    const points = fetchedData ? fetchedData.map(({latitude, longitude, id, damageDegree, description, placeName, placeCategory}) => ({
         type: 'Feature',
         properties: {
             id,
             damageDegree,
             description,
+            placeName,
+            placeCategory
         },
         geometry:  {
             type: 'Point',

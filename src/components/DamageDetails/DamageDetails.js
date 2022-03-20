@@ -1,7 +1,7 @@
 import React from 'react';
 import cn from 'classnames';
-import { Statistic, Row, Col, Button } from 'antd';
 import styles from './DamageDetails.module.scss';
+import { Tag } from 'antd';
 
 export const DamageDetails = ({damageDetails}) => {
     const text = {
@@ -10,18 +10,26 @@ export const DamageDetails = ({damageDetails}) => {
         doesNotWork: 'It does not work!'
     }[damageDetails.damageDegree];
 
-  console.log('debug', damageDetails);
+    const renderCategories = () => {
+        const categories = damageDetails.placeCategory?.split(',');
+        if (categories) {
+          return (
+            <div className={styles.placeCategory}>
+              {categories.map((category, categoryIndex) => (
+                <Tag key={categoryIndex}>
+                  {category}
+                </Tag>
+              ))}
+            </div>
+            )
+        }
+        return null;
+    };
+
   return (
     <div className={styles.wrapper}>
-        <div className={styles.address}>
-            <p className={styles.heading}>
-                Address:
-            </p>
-            <p className={styles.content}>
-                {damageDetails.address}
-            </p>
-        </div>
       <div className={styles.damageDegree}>
+        {renderCategories()}
         <p className={styles.heading}>
           Damage degree:
         </p>

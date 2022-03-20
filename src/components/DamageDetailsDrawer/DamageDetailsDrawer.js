@@ -12,7 +12,7 @@ export const DamageDetailsDrawer = ({damageDetails, visible, onClose}) => {
   const isMobile = useIsMobile();
 
   return (
-    <Drawer             title={'Details'}
+    <Drawer             title={damageDetails?.placeName}
                         className={cn(styles.drawer, {[styles.drawerDesktop]: !isMobile})} placement={isMobile ? 'bottom' : 'left'} visible={visible} onClose={onClose}>
       {damageDetails && <DamageDetails damageDetails={damageDetails} />}
     </Drawer>
