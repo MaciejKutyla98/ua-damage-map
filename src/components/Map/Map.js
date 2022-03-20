@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import cn from 'classnames';
-import ReactMapGL, {Marker} from "react-map-gl";
+import ReactMapGL, {Marker, FlyToInterpolator} from "react-map-gl";
 import {fetchData} from "../FetchData/FetchData";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import 'react-map-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import Geocoder from 'react-map-gl-geocoder'
 import {Modal} from "../Modal/Modal";
 import {MarkerIcon} from '../MarkerIcon/MarkerIcon';
+import useSupercluster from 'use-supercluster';
 
 import styles from './Map.module.scss';
 import {DamageDetailsDrawer} from '../DamageDetailsDrawer/DamageDetailsDrawer';
@@ -45,6 +46,7 @@ export const Map = () => {
         []
     );
 
+    const bounds = mapRef?.current?.getMap().getBounds().toArray().flat();
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -65,7 +67,29 @@ export const Map = () => {
             setFetchedData(data)
         })
     }, [])
-    console.log(fetchedData)
+
+    const points = fetchedData ? fetchedData.map(({latitude, longitude, id, damageDegree, description}) => ({
+        type: 'Feature',
+        properties: {
+            id,
+            damageDegree,
+            description,
+        },
+        geometry:  {
+            type: 'Point',
+            coordinates:  [longitude, latitude]
+        }
+    })) : [];
+
+    const { clusters, supercluster } = useSupercluster({
+        points,
+        bounds,
+        zoom: mapViewport.zoom,
+        options: {
+            radius: 75,
+            maxZoom: 20,
+        }
+    });
 
     return (
       <>
@@ -81,23 +105,68 @@ export const Map = () => {
                 showModal()
             }}
         >
-            {fetchedData?.map((damageReport) => {
-                const variant = {
-                    worksCorrectly: 'good',
-                    worksPartially: 'moderate',
-                    doesNotWork: 'bad'
-                }[damageReport.damageDegree];
+            {clusters.map((cluster, index) => {
+                const [longitude, latitude] = cluster.geometry.coordinates;
+                const properties = cluster?.properties;
+                const isCluster = properties?.cluster;
+                const pointCount = properties?.point_count;
+
+                console.log('ppp', properties);
+
+                const handleOnClick = () => {
+                    if (isCluster) {
+                        const expansionZoom = Math.min(
+                          supercluster.getClusterExpansionZoom(cluster.id),
+                          20
+                        );
+                        setMapViewport((previousMapViewport) => {
+                            return ({
+                                ...previousMapViewport,
+                                longitude,
+                                latitude,
+                                zoom: expansionZoom,
+                                transitionInterpolator: new FlyToInterpolator({
+                                    speed: 2
+                                }),
+                                transitionDuration: 'auto'
+                            });
+                        });
+                    }
+                };
+
+                if (isCluster) {
+                    return <Marker
+                      key={index}
+                      latitude={latitude}
+                      longitude={longitude}
+                    >
+                        <MarkerIcon
+                          pointCount={pointCount}
+                          onClick={() => {
+                              handleOnClick();
+                          }}
+                        />
+                    </Marker>;
+                }
+
+                const markerIconVariant = {
+                    ['worksCorrectly']: 'bad',
+                    ['worksPartially']: 'moderate',
+                    ['doesNotWork']: 'good'
+                }[properties.damageDegree];
 
                 return <Marker
-                  key={damageReport.id}
-                  latitude={damageReport.latitude}
-                  longitude={damageReport.longitude}
+                  key={index}
+                  latitude={latitude}
+                  longitude={longitude}
                 >
                     <MarkerIcon
-                      variant={variant}
-                      onClick={(e) => {
-                         setCurrentDamageDetails(damageReport);
-                      }}
+                      variant={markerIconVariant}
+                      onClick={() => {
+                          handleOnClick()
+                          setCurrentDamageDetails(properties);
+                      }
+                    }
                     />
                 </Marker>;
             })}
@@ -107,9 +176,6 @@ export const Map = () => {
                 onViewportChange={handleGeocoderViewportChange}
                 mapboxApiAccessToken='pk.eyJ1IjoibWFjaWVqbzExNyIsImEiOiJjbDBwZHlrOGMxeGk0M2N1bzU5Z2V1Yjh3In0.5K0DGY1wdACaDKut7kM2Zw'
                 position="top-left"
-                onClick={() => {
-                    console.log('test')
-                }}
             />
             <Modal
                 isModalVisible={isModalVisible}

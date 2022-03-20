@@ -11,8 +11,6 @@ import { Drawer } from 'antd';
 export const DamageDetailsDrawer = ({damageDetails, visible, onClose}) => {
   const isMobile = useIsMobile();
 
-  console.log('is', isMobile);
-
   return (
     <Drawer             title={'Details'}
                         className={cn(styles.drawer, {[styles.drawerDesktop]: !isMobile})} placement={isMobile ? 'bottom' : 'left'} visible={visible} onClose={onClose}>
