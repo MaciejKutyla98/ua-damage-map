@@ -119,14 +119,14 @@ export const Map = () => {
                 lngLat={lngLat}
             />
         </ReactMapGL>
-          <DamageDetailsDrawer
+          {currentDamageDetails && <DamageDetailsDrawer
             title={'Details'}
             visible={!!currentDamageDetails}
             onClose={() => {
                 setCurrentDamageDetails(undefined);
             }}
             damageDetails={currentDamageDetails}
-          />
+          />}
           </>
     );
 }

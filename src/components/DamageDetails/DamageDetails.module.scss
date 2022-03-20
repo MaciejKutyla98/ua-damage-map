@@ -1,0 +1,29 @@
+.wrapper {
+
+}
+
+.damageDegree {
+
+}
+
+.description {
+
+}
+
+.heading {
+  font-weight: bold;
+}
+
+.content {
+  &.contentGood {
+    color: #52c41a;
+  }
+
+  &.contentModerate {
+    color: #d48806;
+  }
+
+  &.contentBad {
+    color: #ff4d4f;
+  }
+}
